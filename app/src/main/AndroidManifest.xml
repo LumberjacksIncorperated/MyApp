@@ -22,7 +22,11 @@
             android:name=".WifiSettingsActivity"
             android:label="@string/title_activity_wifi_settings"
             android:theme="@style/AppTheme.NoActionBar">
-
+        </activity>
+        <activity
+            android:name=".RemoteWebServerActivity"
+            android:label="@string/title_activity_remote_web_server"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
