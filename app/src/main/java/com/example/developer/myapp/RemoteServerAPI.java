@@ -47,25 +47,27 @@ public class RemoteServerAPI {
 
     private static void makeHTTPPOSTRequestFromURLWithParameterToValueMapping(String stringUrlToMakePOSTRequestTo, Map<String, String> mappingOfParametersToValues) {
         try {
+            String parameterQueryString = generateHTTPParameterQueryStringFromMappingOfParametersToValues(mappingOfParametersToValues);
 
-            URL urlToMakePOSTRequestTo = new URL(stringUrlToMakePOSTRequestTo);
+            URL urlToMakePOSTRequestTo = new URL(stringUrlToMakePOSTRequestTo+"?"+parameterQueryString);
             HttpURLConnection connectionToURLForMakingPOSTRequest = (HttpURLConnection) urlToMakePOSTRequestTo.openConnection();
             connectionToURLForMakingPOSTRequest.setReadTimeout(10000);
             connectionToURLForMakingPOSTRequest.setConnectTimeout(15000);
-            connectionToURLForMakingPOSTRequest.setRequestMethod("POST");
+            connectionToURLForMakingPOSTRequest.setRequestMethod("GET");
             connectionToURLForMakingPOSTRequest.setDoInput(true);
             connectionToURLForMakingPOSTRequest.setDoOutput(true);
 
-            OutputStream connectionOutputStream = connectionToURLForMakingPOSTRequest.getOutputStream();
+            /*OutputStream connectionOutputStream = connectionToURLForMakingPOSTRequest.getOutputStream();
             BufferedWriter bufferedWriterForConnectionOutputStream = new BufferedWriter(
                     new OutputStreamWriter(connectionOutputStream, "UTF-8"));
-            String parameterQueryString = generateHTTPParameterQueryStringFromMappingOfParametersToValues(mappingOfParametersToValues);
             bufferedWriterForConnectionOutputStream.write(parameterQueryString);
             bufferedWriterForConnectionOutputStream.flush();
             bufferedWriterForConnectionOutputStream.close();
-            connectionOutputStream.close();
+            connectionOutputStream.close();*/
 
             connectionToURLForMakingPOSTRequest.connect();
+            connectionToURLForMakingPOSTRequest.getInputStream();
+            connectionToURLForMakingPOSTRequest.getResponseCode();
 
         } catch (Exception e) {
             e.printStackTrace();
