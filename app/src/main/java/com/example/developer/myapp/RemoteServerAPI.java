@@ -1,5 +1,6 @@
 package com.example.developer.myapp;
 
+import android.os.Handler;
 import android.util.Pair;
 
 import java.io.BufferedWriter;
@@ -49,11 +50,11 @@ public class RemoteServerAPI {
 
             URL urlToMakePOSTRequestTo = new URL(stringUrlToMakePOSTRequestTo);
             HttpURLConnection connectionToURLForMakingPOSTRequest = (HttpURLConnection) urlToMakePOSTRequestTo.openConnection();
-            //conn.setReadTimeout(10000);
-            //conn.setConnectTimeout(15000);
+            connectionToURLForMakingPOSTRequest.setReadTimeout(10000);
+            connectionToURLForMakingPOSTRequest.setConnectTimeout(15000);
             connectionToURLForMakingPOSTRequest.setRequestMethod("POST");
-            //connectionToURLForMakingPOSTRequest.setDoInput(false);
-            //connectionToURLForMakingPOSTRequest.setDoOutput(false);
+            connectionToURLForMakingPOSTRequest.setDoInput(true);
+            connectionToURLForMakingPOSTRequest.setDoOutput(true);
 
             OutputStream connectionOutputStream = connectionToURLForMakingPOSTRequest.getOutputStream();
             BufferedWriter bufferedWriterForConnectionOutputStream = new BufferedWriter(
@@ -72,17 +73,25 @@ public class RemoteServerAPI {
     }
 
 
+    private static void makeAsyncronousHTTPPOSTRequestFromURLWithParameterToValueMapping(final String stringUrlToMakePOSTRequestTo, final Map<String, String> mappingOfParametersToValues) {
+        Thread threadToGoFoodASAP = new Thread(new Runnable() {
+            public void run() {
+                RemoteServerAPI.makeHTTPPOSTRequestFromURLWithParameterToValueMapping(stringUrlToMakePOSTRequestTo, mappingOfParametersToValues);
+            }
+        });
+        threadToGoFoodASAP.start();
+    }
 
 
 
 
-    private static final String REQUEST_URL_FOR_SENDING_MESSAGE_TO_SERVER = "http://127.0.0.1/send_message.php";
+    private static final String REQUEST_URL_FOR_SENDING_MESSAGE_TO_SERVER = "http://192.168.0.146/send_message.php";
     private static final String KEY_FOR_MESSAGE_PARAMETER = "message";
 
     public static void sendMessageToRemoteServer(String messageToSend) {
         HashMap parametersInRequest = new HashMap<String, String>();
         parametersInRequest.put(KEY_FOR_MESSAGE_PARAMETER, messageToSend);
-        makeHTTPPOSTRequestFromURLWithParameterToValueMapping(REQUEST_URL_FOR_SENDING_MESSAGE_TO_SERVER, parametersInRequest);
+        makeAsyncronousHTTPPOSTRequestFromURLWithParameterToValueMapping(REQUEST_URL_FOR_SENDING_MESSAGE_TO_SERVER, parametersInRequest);
     }
 
 }

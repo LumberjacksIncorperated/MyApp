@@ -32,7 +32,8 @@ public class RemoteWebServerActivity extends SRActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RemoteWebServerActivity.this.toggelThisDevicesWifi();
+                String messageToSendToServer = inputMessageTextBox.getText().toString();
+                RemoteServerAPI.sendMessageToRemoteServer(messageToSendToServer);
             }
         };
     }
