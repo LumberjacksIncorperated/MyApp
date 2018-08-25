@@ -115,14 +115,15 @@ public class SystemPeriferals extends Object {
             PendingIntent pendingIntent = PendingIntent.getActivity(applicationContext, 0, ii, 0);
 
             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-            bigText.bigText("http://google.com/");
-            bigText.setBigContentTitle("Today's Bible Verse");
-            bigText.setSummaryText("Text in detail");
+            String title = "MyApp Notification";
+            bigText.bigText(messageStringForNotification);
+            bigText.setBigContentTitle(title);
+            bigText.setSummaryText(messageStringForNotification);
 
             mBuilder.setContentIntent(pendingIntent);
             mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
-            mBuilder.setContentTitle("Your Title");
-            mBuilder.setContentText("Your text");
+            mBuilder.setContentTitle(title);
+            mBuilder.setContentText(messageStringForNotification);
             mBuilder.setPriority(Notification.PRIORITY_MAX);
             mBuilder.setStyle(bigText);
 
