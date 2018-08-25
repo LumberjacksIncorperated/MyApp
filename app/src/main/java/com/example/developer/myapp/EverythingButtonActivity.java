@@ -28,7 +28,7 @@ public class EverythingButtonActivity extends SRActivity {
     }
 
     private void doEverything() {
-        this.finish();
+        systemPeriferals().systemNotifications().sendNotificationToUserWithMessageString("If you are seeing this, everyting has been done.");
     }
 
 }
