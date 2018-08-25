@@ -33,6 +33,11 @@ public class SystemPeriferals extends Object {
         return new Wifi(this);
     }
 
+    public SystemNotifications systemNotifications() {
+        return new SystemNotifications(this);
+    }
+
+
     enum WifiState {
         WIFI_DISABLED, WIFI_ENABLED
     }
@@ -62,6 +67,36 @@ public class SystemPeriferals extends Object {
             WifiManager wifiManager = this.getWifiManagerForThisSystem();
             boolean theWifiShouldBeEnabled = (theWifiStateToSet == WifiState.WIFI_ENABLED);
             wifiManager.setWifiEnabled(theWifiShouldBeEnabled);
+        }
+    }
+
+    public class SystemNotifications {
+        private final SystemPeriferals systemPeriferalsForThisSystemNotificationsModule;
+
+        private SystemNotifications(SystemPeriferals systemPeriferalsForSystemNotificationsModule) {
+            this.systemPeriferalsForThisSystemNotificationsModule = systemPeriferalsForSystemNotificationsModule;
+        }
+
+        public void sendNotificationToUserWithMessageString(String messageStringForNotification) {
+            Intent intent = new Intent(ctx, HomeActivity.class);
+            PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            NotificationCompat.Builder b = new NotificationCompat.Builder(ctx);
+
+            b.setAutoCancel(true)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setTicker("Hearty365")
+                    .setContentTitle("Default notification")
+                    .setContentText("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+                    .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_SOUND)
+                    .setContentIntent(contentIntent)
+                    .setContentInfo("Info");
+
+
+            NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(1, b.build());
         }
     }
 }
