@@ -29,6 +29,11 @@
             android:label="@string/title_activity_remote_web_server"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".UselessButtonActivity"
+            android:label="UselssButtonActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

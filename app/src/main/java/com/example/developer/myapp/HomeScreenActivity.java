@@ -28,6 +28,7 @@ public class HomeScreenActivity extends SRActivity {
     private void initialiseHomeButtons() {
         this.initialiseG1Button();
         this.initialiseG2Button();
+        this.initialiseG3Button();
     }
 
     private void initialiseG1Button() {
@@ -50,6 +51,16 @@ public class HomeScreenActivity extends SRActivity {
         });
     }
 
+    private void initialiseG3Button() {
+        Button g2Button = (Button)this.findViewById(R.id.g3Button);
+        g2Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HomeScreenActivity.this.moveToTheUselessButtonActivity();
+            }
+        });
+    }
+
     private void moveToTheWifiSettingsActivity() {
         Context applicationContext = this.getApplicationContext();
         Intent intentToMoveToTheWifiSettingsActivity = new Intent(applicationContext, WifiSettingsActivity.class);
@@ -60,5 +71,11 @@ public class HomeScreenActivity extends SRActivity {
         Context applicationContext = this.getApplicationContext();
         Intent intentToMoveToTheRemoteWebServerActivity = new Intent(applicationContext, RemoteWebServerActivity.class);
         this.startActivity(intentToMoveToTheRemoteWebServerActivity);
+    }
+
+    private void moveToTheUselessButtonActivity() {
+        Context applicationContext = this.getApplicationContext();
+        Intent intentToMoveToTheUselessButtonActivity = new Intent(applicationContext, UselessButtonActivity.class);
+        this.startActivity(intentToMoveToTheUselessButtonActivity);
     }
 }
