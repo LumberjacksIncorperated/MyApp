@@ -84,12 +84,8 @@ public class RemoteServerAPI {
         threadToGoFoodASAP.start();
     }
 
-
-
-
     private static final String REQUEST_URL_FOR_SENDING_MESSAGE_TO_SERVER = "http://192.168.0.146/send_message.php";
     private static final String KEY_FOR_MESSAGE_PARAMETER = "message";
-
     public static void sendMessageToRemoteServer(String messageToSend) {
         HashMap parametersInRequest = new HashMap<String, String>();
         parametersInRequest.put(KEY_FOR_MESSAGE_PARAMETER, messageToSend);

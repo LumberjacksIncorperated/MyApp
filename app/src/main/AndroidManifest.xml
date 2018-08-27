@@ -34,6 +34,11 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name=".UselessButtonActivity"
+            android:label="UselssButtonActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".EverythingButtonActivity"
             android:label="EverythingButtonActivity"
             android:theme="@style/AppTheme.NoActionBar">
