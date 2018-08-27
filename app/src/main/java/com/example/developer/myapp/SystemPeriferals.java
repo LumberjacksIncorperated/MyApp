@@ -85,25 +85,41 @@ public class SystemPeriferals extends Object {
             this.systemPeriferalsForThisSystemNotificationsModule = systemPeriferalsForSystemNotificationsModule;
         }
 
-        private final int NO_FLAG = 0;
-        private final static int PENDING_INTENT_REQUEST_CODE_FOR_PUSH_NOTIFICATION = 0;
         public void sendNotificationToUserWithMessageString(String messageStringForNotification) {
+            Notification pushNotification = createPushNotificationForMessage(messageStringForNotification);
+            pushPushNotification(pushNotification);
+        }
 
-            // Get The Application Context
+        private void pushPushNotification(Notification pushNotification) {
             Context applicationContext = systemPeriferalsForThisSystemNotificationsModule.getContextForSystemPeriferals().getApplicationContext();
+            NotificationManager pushNotificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (systemVersionIsOreo()) {
+                createChannelInPushNotificationManagerForOreo(pushNotificationManager);
+            }
+            pushNotificationManager.notify(0, pushNotification);
+        }
 
-            // Create pending intent
-            Intent intentToGoToTheHomeScreenActivity = new Intent(applicationContext, HomeScreenActivity.class);
-            PendingIntent pendingIntentToGoToTheHomeScreenActivity = PendingIntent.getActivity(applicationContext, PENDING_INTENT_REQUEST_CODE_FOR_PUSH_NOTIFICATION, intentToGoToTheHomeScreenActivity, NO_FLAG);
+        private boolean systemVersionIsOreo(){
+            return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O);
+        }
 
-            // Create big text
+        private void createChannelInPushNotificationManagerForOreo(NotificationManager pushNotificationManager) {
+            NotificationChannel channel = new NotificationChannel("notify_001", "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT);
+            pushNotificationManager.createNotificationChannel(channel);
+        }
+
+        private Notification createPushNotificationForMessage(String messageStringForNotification) {
+            Context applicationContext = systemPeriferalsForThisSystemNotificationsModule.getContextForSystemPeriferals().getApplicationContext();
+            PendingIntent pendingIntentToGoToTheHomeScreenActivity = createPendingIntentForGoingToHomeScreenActivity();
+
+
+            NotificationCompat.Builder pushNotificationBuilder = createPushNotificationWithPrebuiltStuffThatYouCantChangeBUT
+
             String pushNotificationTitle = "MyApp Notification";
             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
             bigText.bigText(messageStringForNotification);
             bigText.setBigContentTitle(pushNotificationTitle);
             bigText.setSummaryText(messageStringForNotification);
-
-            // Set variables in push notification builder
             NotificationCompat.Builder pushNotificationBuilder = new NotificationCompat.Builder(applicationContext, "notify_001");
             pushNotificationBuilder.setContentIntent(pendingIntentToGoToTheHomeScreenActivity);
             pushNotificationBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
@@ -112,15 +128,18 @@ public class SystemPeriferals extends Object {
             pushNotificationBuilder.setPriority(Notification.PRIORITY_MAX);
             pushNotificationBuilder.setStyle(bigText);
 
-            // Use manager for the final steps (needs builder)
-            NotificationManager pushNotificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel("notify_001",
-                        "Channel human readable title",
-                        NotificationManager.IMPORTANCE_DEFAULT);
-                pushNotificationManager.createNotificationChannel(channel);
-            }
-            pushNotificationManager.notify(0, pushNotificationBuilder.build());
+            Notification pushNotification = pushNotificationBuilder.build();
+
+            return pushNotification;
+        }
+
+        private final int NO_FLAG = 0;
+        private final static int PENDING_INTENT_REQUEST_CODE_FOR_PUSH_NOTIFICATION = 0;
+        private PendingIntent createPendingIntentForGoingToHomeScreenActivity() {
+            Context applicationContext = systemPeriferalsForThisSystemNotificationsModule.getContextForSystemPeriferals().getApplicationContext();
+            Intent intentToGoToTheHomeScreenActivity = new Intent(applicationContext, HomeScreenActivity.class);
+            PendingIntent pendingIntentToGoToTheHomeScreenActivity = PendingIntent.getActivity(applicationContext, PENDING_INTENT_REQUEST_CODE_FOR_PUSH_NOTIFICATION, intentToGoToTheHomeScreenActivity, NO_FLAG);
+            return pendingIntentToGoToTheHomeScreenActivity;
         }
     }
 }
