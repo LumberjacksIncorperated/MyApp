@@ -78,66 +78,49 @@ public class SystemPeriferals extends Object {
     }
 
     public class SystemNotifications {
+
         private final SystemPeriferals systemPeriferalsForThisSystemNotificationsModule;
 
         private SystemNotifications(SystemPeriferals systemPeriferalsForSystemNotificationsModule) {
             this.systemPeriferalsForThisSystemNotificationsModule = systemPeriferalsForSystemNotificationsModule;
         }
 
+        private final int NO_FLAG = 0;
+        private final static int PENDING_INTENT_REQUEST_CODE_FOR_PUSH_NOTIFICATION = 0;
         public void sendNotificationToUserWithMessageString(String messageStringForNotification) {
-            /*Context applicationContext = systemPeriferalsForThisSystemNotificationsModule.getContextForSystemPeriferals().getApplicationContext();
 
-            Intent intent = new Intent(applicationContext, HomeScreenActivity.class);
-            PendingIntent contentIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            NotificationCompat.Builder b = new NotificationCompat.Builder(applicationContext);
-
-            b.setAutoCancel(true)
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_launcher_background)
-                    .setTicker("Hearty365")
-                    .setContentTitle("MyApp Notification")
-                    .setContentText(messageStringForNotification)
-                    .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_SOUND)
-                    .setContentIntent(contentIntent)
-                    .setContentInfo("Info");
-
-
-            NotificationManager notificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(0, b.build());*/
-
+            // Get The Application Context
             Context applicationContext = systemPeriferalsForThisSystemNotificationsModule.getContextForSystemPeriferals().getApplicationContext();
 
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(applicationContext, "notify_001");
-            Intent ii = new Intent(applicationContext, HomeScreenActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(applicationContext, 0, ii, 0);
+            // Create pending intent
+            Intent intentToGoToTheHomeScreenActivity = new Intent(applicationContext, HomeScreenActivity.class);
+            PendingIntent pendingIntentToGoToTheHomeScreenActivity = PendingIntent.getActivity(applicationContext, PENDING_INTENT_REQUEST_CODE_FOR_PUSH_NOTIFICATION, intentToGoToTheHomeScreenActivity, NO_FLAG);
 
+            // Create big text
+            String pushNotificationTitle = "MyApp Notification";
             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-            String title = "MyApp Notification";
             bigText.bigText(messageStringForNotification);
-            bigText.setBigContentTitle(title);
+            bigText.setBigContentTitle(pushNotificationTitle);
             bigText.setSummaryText(messageStringForNotification);
 
-            mBuilder.setContentIntent(pendingIntent);
-            mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
-            mBuilder.setContentTitle(title);
-            mBuilder.setContentText(messageStringForNotification);
-            mBuilder.setPriority(Notification.PRIORITY_MAX);
-            mBuilder.setStyle(bigText);
+            // Set variables in push notification builder
+            NotificationCompat.Builder pushNotificationBuilder = new NotificationCompat.Builder(applicationContext, "notify_001");
+            pushNotificationBuilder.setContentIntent(pendingIntentToGoToTheHomeScreenActivity);
+            pushNotificationBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
+            pushNotificationBuilder.setContentTitle(pushNotificationTitle);
+            pushNotificationBuilder.setContentText(messageStringForNotification);
+            pushNotificationBuilder.setPriority(Notification.PRIORITY_MAX);
+            pushNotificationBuilder.setStyle(bigText);
 
-            NotificationManager mNotificationManager =
-                    (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
-
+            // Use manager for the final steps (needs builder)
+            NotificationManager pushNotificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel channel = new NotificationChannel("notify_001",
                         "Channel human readable title",
                         NotificationManager.IMPORTANCE_DEFAULT);
-                mNotificationManager.createNotificationChannel(channel);
+                pushNotificationManager.createNotificationChannel(channel);
             }
-
-            mNotificationManager.notify(0, mBuilder.build());
+            pushNotificationManager.notify(0, pushNotificationBuilder.build());
         }
     }
 }
