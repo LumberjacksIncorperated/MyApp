@@ -111,10 +111,12 @@ public class SystemPeriferals extends Object {
         private Notification createPushNotificationForMessage(String messageStringForNotification) {
             Context applicationContext = systemPeriferalsForThisSystemNotificationsModule.getContextForSystemPeriferals().getApplicationContext();
             PendingIntent pendingIntentToGoToTheHomeScreenActivity = createPendingIntentForGoingToHomeScreenActivity();
+            Notification pushNotification = createPushNotificationWithMessageAndContentIntent(messageStringForNotification, pendingIntentToGoToTheHomeScreenActivity);
+            return pushNotification;
+        }
 
-
-            NotificationCompat.Builder pushNotificationBuilder = createPushNotificationWithPrebuiltStuffThatYouCantChangeBUT
-
+        private Notification createPushNotificationWithMessageAndContentIntent(String messageStringForNotification, PendingIntent pendingIntentToGoToTheHomeScreenActivity) {
+            Context applicationContext = systemPeriferalsForThisSystemNotificationsModule.getContextForSystemPeriferals().getApplicationContext();
             String pushNotificationTitle = "MyApp Notification";
             NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
             bigText.bigText(messageStringForNotification);
@@ -127,9 +129,7 @@ public class SystemPeriferals extends Object {
             pushNotificationBuilder.setContentText(messageStringForNotification);
             pushNotificationBuilder.setPriority(Notification.PRIORITY_MAX);
             pushNotificationBuilder.setStyle(bigText);
-
             Notification pushNotification = pushNotificationBuilder.build();
-
             return pushNotification;
         }
 
