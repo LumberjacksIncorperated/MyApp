@@ -28,11 +28,8 @@ public class HomeScreenActivity extends SRActivity {
     private void initialiseHomeButtons() {
         this.initialiseG1Button();
         this.initialiseG2Button();
-<<<<<<< HEAD
         this.initialiseG4Button();
-=======
         this.initialiseG3Button();
->>>>>>> a749bc2594ba3edbf3f869296da8a457b330f83c
     }
 
     private void initialiseG1Button() {
@@ -55,29 +52,26 @@ public class HomeScreenActivity extends SRActivity {
         });
     }
 
-<<<<<<< HEAD
     private void initialiseG4Button() {
         Button g2Button = (Button)this.findViewById(R.id.g4Button);
         g2Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 HomeScreenActivity.this.moveToTheEverythingButtonActivity();
-=======
+            }
+        });
+    }
+
     private void initialiseG3Button() {
         Button g2Button = (Button)this.findViewById(R.id.g3Button);
         g2Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 HomeScreenActivity.this.moveToTheUselessButtonActivity();
->>>>>>> a749bc2594ba3edbf3f869296da8a457b330f83c
             }
         });
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> a749bc2594ba3edbf3f869296da8a457b330f83c
     private void moveToTheWifiSettingsActivity() {
         Context applicationContext = this.getApplicationContext();
         Intent intentToMoveToTheWifiSettingsActivity = new Intent(applicationContext, WifiSettingsActivity.class);
@@ -90,16 +84,15 @@ public class HomeScreenActivity extends SRActivity {
         this.startActivity(intentToMoveToTheRemoteWebServerActivity);
     }
 
-<<<<<<< HEAD
     private void moveToTheEverythingButtonActivity() {
         Context applicationContext = this.getApplicationContext();
         Intent intentToMoveToTheEverythingButtonActivity = new Intent(applicationContext, EverythingButtonActivity.class);
         this.startActivity(intentToMoveToTheEverythingButtonActivity);
-=======
+    }
+
     private void moveToTheUselessButtonActivity() {
         Context applicationContext = this.getApplicationContext();
         Intent intentToMoveToTheUselessButtonActivity = new Intent(applicationContext, UselessButtonActivity.class);
         this.startActivity(intentToMoveToTheUselessButtonActivity);
->>>>>>> a749bc2594ba3edbf3f869296da8a457b330f83c
     }
 }
