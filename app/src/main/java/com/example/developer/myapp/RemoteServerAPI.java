@@ -17,32 +17,24 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 public class RemoteServerAPI {
-
-
+    
     private static String generateHTTPParameterQueryStringFromMappingOfParametersToValues(Map<String, String> mappingOfParametersToValues) {
-        StringBuilder result = new StringBuilder();
+        String HTTPParameterQueryString = new String();
         boolean currentlyOnTheFirstParameterInTheList = true;
-
         try {
-
             for (Map.Entry<String, String> parameterToValueMapping : mappingOfParametersToValues.entrySet()) {
+                if (!currentlyOnTheFirstParameterInTheList) HTTPParameterQueryString += "&";
                 String parameter = parameterToValueMapping.getKey();
                 String value = parameterToValueMapping.getValue();
-
-                if (!currentlyOnTheFirstParameterInTheList) result.append("&");
-
-                result.append(URLEncoder.encode(parameter, "UTF-8"));
-                result.append("=");
-                result.append(URLEncoder.encode(value, "UTF-8"));
-
+                HTTPParameterQueryString +=  URLEncoder.encode(parameter, "UTF-8");
+                HTTPParameterQueryString += "=";
+                HTTPParameterQueryString += URLEncoder.encode(value, "UTF-8");
                 currentlyOnTheFirstParameterInTheList = false;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return result.toString();
+        return HTTPParameterQueryString;
     }
 
     private static void makeHTTPPOSTRequestFromURLWithParameterToValueMapping(String stringUrlToMakePOSTRequestTo, Map<String, String> mappingOfParametersToValues) {
@@ -56,21 +48,13 @@ public class RemoteServerAPI {
             connectionToURLForMakingPOSTRequest.setRequestMethod("GET");
             connectionToURLForMakingPOSTRequest.setDoInput(true);
             connectionToURLForMakingPOSTRequest.setDoOutput(true);
-
-            /*OutputStream connectionOutputStream = connectionToURLForMakingPOSTRequest.getOutputStream();
-            BufferedWriter bufferedWriterForConnectionOutputStream = new BufferedWriter(
-                    new OutputStreamWriter(connectionOutputStream, "UTF-8"));
-            bufferedWriterForConnectionOutputStream.write(parameterQueryString);
-            bufferedWriterForConnectionOutputStream.flush();
-            bufferedWriterForConnectionOutputStream.close();
-            connectionOutputStream.close();*/
-
             connectionToURLForMakingPOSTRequest.connect();
             connectionToURLForMakingPOSTRequest.getInputStream();
             connectionToURLForMakingPOSTRequest.getResponseCode();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception thrownException) {
+            thrownException.printStackTrace();
+
         }
     }
 
