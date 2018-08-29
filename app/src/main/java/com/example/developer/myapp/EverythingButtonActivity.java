@@ -11,7 +11,7 @@ package com.example.developer.myapp;
 import android.view.View;
 import android.widget.Button;
 
-public class EverythingButtonActivity extends SRActivity {
+public class EverythingButtonActivity extends BaseActivity {
 
     private final int EVERYTHING_BUTTON_SCREEN_UI_LAYOUT = R.layout.activity_wifi_settings;
     @Override
@@ -38,5 +38,4 @@ public class EverythingButtonActivity extends SRActivity {
     private void doEverything() {
         systemPeriferals().systemNotifications().sendNotificationToUserWithMessageString("If you are seeing this, everyting has been done.");
     }
-
 }

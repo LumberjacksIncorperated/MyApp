@@ -8,13 +8,10 @@
 
 package com.example.developer.myapp;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
-public class UselessButtonActivity extends SRActivity {
+public class UselessButtonActivity extends BaseActivity {
 
     private final int USELESS_BUTTON_SCREEN_UI_LAYOUT = R.layout.activity_wifi_settings;
     @Override

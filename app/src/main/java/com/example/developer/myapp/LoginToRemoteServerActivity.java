@@ -8,7 +8,7 @@
 
 package com.example.developer.myapp;
 
-public class LoginToRemoteServerActivity extends SRActivity {
+public class LoginToRemoteServerActivity extends BaseActivity {
 
     private final int LOGIN_SCREEN_UI_LAYOUT = R.layout.login_activity_screen;
     @Override

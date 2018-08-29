@@ -13,9 +13,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-public class SRActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
 
-    protected void initialiseActivity() {}
+    protected void initialiseActivity() {
+        /*
+         *   This method is intended to be overriden by inheriting classes, and should
+         *   contain the code required to initialize the activity
+         */
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -8,17 +8,10 @@
 
 package com.example.developer.myapp;
 
-import android.content.Context;
-import android.net.wifi.WifiManager;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-public class WifiSettingsActivity extends SRActivity {
+public class WifiSettingsActivity extends BaseActivity {
 
     private final int WIFI_SETTINGS_UI_LAYOUT = R.layout.activity_wifi_settings;
     @Override
