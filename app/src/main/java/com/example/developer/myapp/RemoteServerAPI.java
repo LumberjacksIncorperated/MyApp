@@ -45,35 +45,50 @@ public class RemoteServerAPI {
         return HTTPParameterQueryString;
     }
 
-    private static void makeHTTPPOSTRequestFromURLWithParameterToValueMapping(String stringUrlToMakePOSTRequestTo, Map<String, String> mappingOfParametersToValues) {
+    private static void setURLConenctionParametersForPOSTRequest(HttpURLConnection connectionToURLForMakingPOSTRequest) {
         try {
-            String parameterQueryString = generateHTTPParameterQueryStringFromMappingOfParametersToValues(mappingOfParametersToValues);
-
-            URL urlToMakePOSTRequestTo = new URL(stringUrlToMakePOSTRequestTo+"?"+parameterQueryString);
-            HttpURLConnection connectionToURLForMakingPOSTRequest = (HttpURLConnection) urlToMakePOSTRequestTo.openConnection();
             connectionToURLForMakingPOSTRequest.setReadTimeout(10000);
             connectionToURLForMakingPOSTRequest.setConnectTimeout(15000);
             connectionToURLForMakingPOSTRequest.setRequestMethod("GET");
             connectionToURLForMakingPOSTRequest.setDoInput(true);
             connectionToURLForMakingPOSTRequest.setDoOutput(true);
+        } catch (Exception thrownException) {
+            thrownException.printStackTrace();
+        }
+    }
+
+    private static URL createURLToMakePOSTRequestToWithParameterQueryStringFromMappingAndStringURL(String stringUrlToMakePOSTRequestTo, Map<String, String> mappingOfParametersToValues) {
+        try {
+            String parameterQueryString = generateHTTPParameterQueryStringFromMappingOfParametersToValues(mappingOfParametersToValues);
+            URL urlToMakePOSTRequestTo = new URL(stringUrlToMakePOSTRequestTo + "?" + parameterQueryString);
+            return urlToMakePOSTRequestTo;
+        } catch (Exception thrownException) {
+            thrownException.printStackTrace();
+        }
+    }
+
+    private static void makeHTTPPOSTRequestFromURLWithParameterToValueMapping(String stringUrlToMakePOSTRequestTo, Map<String, String> mappingOfParametersToValues) {
+        try {
+            URL urlToMakePOSTRequestTo = createURLToMakePOSTRequestToWithParameterQueryStringFromMappingAndStringURL(stringUrlToMakePOSTRequestTo, mappingOfParametersToValues);
+            HttpURLConnection connectionToURLForMakingPOSTRequest = (HttpURLConnection) urlToMakePOSTRequestTo.openConnection();
+            setURLConenctionParametersForPOSTRequest(connectionToURLForMakingPOSTRequest);
+
             connectionToURLForMakingPOSTRequest.connect();
             connectionToURLForMakingPOSTRequest.getInputStream();
             connectionToURLForMakingPOSTRequest.getResponseCode();
 
         } catch (Exception thrownException) {
             thrownException.printStackTrace();
-
         }
     }
 
-
     private static void makeAsyncronousHTTPPOSTRequestFromURLWithParameterToValueMapping(final String stringUrlToMakePOSTRequestTo, final Map<String, String> mappingOfParametersToValues) {
-        Thread threadToGoFoodASAP = new Thread(new Runnable() {
+        Thread threadToSendMesasgeToServer = new Thread(new Runnable() {
             public void run() {
                 RemoteServerAPI.makeHTTPPOSTRequestFromURLWithParameterToValueMapping(stringUrlToMakePOSTRequestTo, mappingOfParametersToValues);
             }
         });
-        threadToGoFoodASAP.start();
+        threadToSendMesasgeToServer.start();
     }
 
     private static final String REQUEST_URL_FOR_SENDING_MESSAGE_TO_SERVER = "http://192.168.0.146/send_message.php";
@@ -83,5 +98,4 @@ public class RemoteServerAPI {
         parametersInRequest.put(KEY_FOR_MESSAGE_PARAMETER, messageToSend);
         makeAsyncronousHTTPPOSTRequestFromURLWithParameterToValueMapping(REQUEST_URL_FOR_SENDING_MESSAGE_TO_SERVER, parametersInRequest);
     }
-
 }
