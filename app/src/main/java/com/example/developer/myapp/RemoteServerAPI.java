@@ -18,7 +18,9 @@ import java.util.Map;
 
 public class RemoteServerAPI {
 
-
+//----------------------------------------------------------------------------------
+// INTERNAL FUNCTIONS
+//----------------------------------------------------------------------------------
     private static String createHTTPParameterStringSectionForParameterValueMapping(Map.Entry<String, String> parameterToValueMapping) {
         String httpParameterString = "";
         String parameter = parameterToValueMapping.getKey();
@@ -91,27 +93,40 @@ public class RemoteServerAPI {
         threadToSendMesasgeToServer.start();
     }
 
+    static private final String KEY_FOR_SAVED_SESSION_KEY = "saved_session_key";
+    private static String currentSavedSessionKey() {
+        String currentSavedSessionKey =
+    }
+
 //----------------------------------------------------------------------------------
 // EXPORTED FUNCTIONS
 //----------------------------------------------------------------------------------
+    private static final String KEY_FOR_SESSION_KEY_PARAMETER = "session_key";
+
     private static final String REQUEST_URL_FOR_SENDING_MESSAGE_TO_SERVER = "http://192.168.0.146/send_message.php";
     private static final String KEY_FOR_MESSAGE_PARAMETER = "message";
     public static void sendMessageToRemoteServerWithMessageToSendAndAPIDelegate(String messageToSend, RemoteServerAPIDelegate apiDelegate) {
         HashMap parametersInRequest = new HashMap<String, String>();
         parametersInRequest.put(KEY_FOR_MESSAGE_PARAMETER, messageToSend);
+        parametersInRequest.put(KEY_FOR_SESSION_KEY_PARAMETER, RemoteServerAPI.currentSavedSessionKey());
         makeAsyncronousHTTPPOSTRequestFromURLWithParameterToValueMappingAndAPIDelegate(REQUEST_URL_FOR_SENDING_MESSAGE_TO_SERVER, parametersInRequest, apiDelegate);
     }
 
     private static final String REQUEST_URL_FOR_LOGIN_TO_SERVER = "http://192.168.0.146/login.php";
     private static final String KEY_FOR_USERNAME_PARAMETER = "username";
     private static final String KEY_FOR_PASSWORD_PARAMETER = "password";
-    public static void loginToRemoteServerWithUsernamePasswordAndAPIDelegate(String username, String password, RemoteServerAPIDelegate apiDelegate) {
+    public static void loginToRemoteServerWithUsernamePasswordAndAPIDelegate(String username, String password, final RemoteServerAPIDelegate apiDelegate) {
         HashMap parametersInRequest = new HashMap<String, String>();
         parametersInRequest.put(KEY_FOR_USERNAME_PARAMETER, username);
         parametersInRequest.put(KEY_FOR_PASSWORD_PARAMETER, password);
-        makeAsyncronousHTTPPOSTRequestFromURLWithParameterToValueMappingAndAPIDelegate(REQUEST_URL_FOR_LOGIN_TO_SERVER, parametersInRequest, apiDelegate);
+        makeAsyncronousHTTPPOSTRequestFromURLWithParameterToValueMappingAndAPIDelegate(REQUEST_URL_FOR_LOGIN_TO_SERVER, parametersInRequest, new RemoteServerAPIDelegate() {
+            @Override
+            public void receiveResponseFromAPI(RemoteServerAPIResponse apiResponse) {
+                RemoteServerAPI.extractSessionKeyFromResponseAndSaveAsCurrentSessionKey(apiResponse);
+                apiDelegate.receiveResponseFromAPI(apiResponse);
+            }
+        });
     }
-
 
 //----------------------------------------------------------------------------------
 // EXPORTED INTERFACES
