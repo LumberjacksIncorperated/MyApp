@@ -35,7 +35,8 @@ public class RemoteWebServerActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 String messageToSendToServer = textBoxForInputtingUserMessage.getText().toString();
-                RemoteServerAPI.sendMessageToRemoteServerWithMessageToSendAndAPIDelegate(messageToSendToServer, RemoteWebServerActivity.this.delegateWhichDisplaysAPIResponseAsToastMessage());
+                RemoteServerAPI remoteServerAPI = RemoteServerAPI.remoteServerAPIWithContext(RemoteWebServerActivity.this.getApplicationContext());
+                remoteServerAPI.sendMessageToRemoteServerWithMessageToSendAndAPIDelegate(messageToSendToServer, RemoteWebServerActivity.this.delegateWhichDisplaysAPIResponseAsToastMessage());
             }
         };
     }
@@ -44,7 +45,7 @@ public class RemoteWebServerActivity extends BaseActivity {
         return new RemoteServerAPI.RemoteServerAPIDelegate() {
             @Override
             public void receiveResponseFromAPI(RemoteServerAPIResponse apiResponse) {
-                Toast.makeText(RemoteWebServerActivity.this, apiResponse.responseAsString(), Toast.LENGTH_LONG);
+                RemoteWebServerActivity.this.showMessageToUser(apiResponse.responseAsString());
             }
         };
     }

@@ -8,6 +8,8 @@
 
 package com.example.developer.myapp;
 
+import android.content.Context;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
@@ -17,6 +19,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RemoteServerAPI {
+
+    private final Context context;
+
+    private RemoteServerAPI(Context context) {
+        this.context = context;
+    }
+
+    public static RemoteServerAPI remoteServerAPIWithContext(Context context) {
+        return new RemoteServerAPI(context);
+    }
 
 //----------------------------------------------------------------------------------
 // INTERNAL FUNCTIONS
@@ -94,8 +106,15 @@ public class RemoteServerAPI {
     }
 
     static private final String KEY_FOR_SAVED_SESSION_KEY = "saved_session_key";
-    private static String currentSavedSessionKey() {
-        String currentSavedSessionKey =
+    private String currentSavedSessionKey() {
+        UserDataStorage userDataStorage = UserDataStorage.userDataStorageWithContext(context);
+        String currentSavedSessionKey = userDataStorage.getUserDataStringWithKey(KEY_FOR_SAVED_SESSION_KEY);
+        return currentSavedSessionKey;
+    }
+    private void extractSessionKeyFromResponseAndSaveAsCurrentSessionKey(RemoteServerAPIResponse apiResponse) {
+        UserDataStorage userDataStorage = UserDataStorage.userDataStorageWithContext(context);
+        String sessionKeyToSave = apiResponse.responseAsString();
+        userDataStorage.setUserDataStringForKey(sessionKeyToSave, KEY_FOR_SAVED_SESSION_KEY);
     }
 
 //----------------------------------------------------------------------------------
@@ -105,24 +124,24 @@ public class RemoteServerAPI {
 
     private static final String REQUEST_URL_FOR_SENDING_MESSAGE_TO_SERVER = "http://192.168.0.146/send_message.php";
     private static final String KEY_FOR_MESSAGE_PARAMETER = "message";
-    public static void sendMessageToRemoteServerWithMessageToSendAndAPIDelegate(String messageToSend, RemoteServerAPIDelegate apiDelegate) {
+    public void sendMessageToRemoteServerWithMessageToSendAndAPIDelegate(String messageToSend, RemoteServerAPIDelegate apiDelegate) {
         HashMap parametersInRequest = new HashMap<String, String>();
         parametersInRequest.put(KEY_FOR_MESSAGE_PARAMETER, messageToSend);
-        parametersInRequest.put(KEY_FOR_SESSION_KEY_PARAMETER, RemoteServerAPI.currentSavedSessionKey());
+        parametersInRequest.put(KEY_FOR_SESSION_KEY_PARAMETER, this.currentSavedSessionKey());
         makeAsyncronousHTTPPOSTRequestFromURLWithParameterToValueMappingAndAPIDelegate(REQUEST_URL_FOR_SENDING_MESSAGE_TO_SERVER, parametersInRequest, apiDelegate);
     }
 
     private static final String REQUEST_URL_FOR_LOGIN_TO_SERVER = "http://192.168.0.146/login.php";
     private static final String KEY_FOR_USERNAME_PARAMETER = "username";
     private static final String KEY_FOR_PASSWORD_PARAMETER = "password";
-    public static void loginToRemoteServerWithUsernamePasswordAndAPIDelegate(String username, String password, final RemoteServerAPIDelegate apiDelegate) {
+    public void loginToRemoteServerWithUsernamePasswordAndAPIDelegate(String username, String password, final RemoteServerAPIDelegate apiDelegate) {
         HashMap parametersInRequest = new HashMap<String, String>();
         parametersInRequest.put(KEY_FOR_USERNAME_PARAMETER, username);
         parametersInRequest.put(KEY_FOR_PASSWORD_PARAMETER, password);
         makeAsyncronousHTTPPOSTRequestFromURLWithParameterToValueMappingAndAPIDelegate(REQUEST_URL_FOR_LOGIN_TO_SERVER, parametersInRequest, new RemoteServerAPIDelegate() {
             @Override
             public void receiveResponseFromAPI(RemoteServerAPIResponse apiResponse) {
-                RemoteServerAPI.extractSessionKeyFromResponseAndSaveAsCurrentSessionKey(apiResponse);
+                RemoteServerAPI.this.extractSessionKeyFromResponseAndSaveAsCurrentSessionKey(apiResponse);
                 apiDelegate.receiveResponseFromAPI(apiResponse);
             }
         });

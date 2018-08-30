@@ -11,6 +11,7 @@ package com.example.developer.myapp;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginToRemoteServerActivity extends BaseActivity {
 
@@ -48,6 +49,12 @@ public class LoginToRemoteServerActivity extends BaseActivity {
     private void sendLoginRequestToRemoteServer() {
         String inputtedUsernameForLoginRequest = usernameEditTextField.getText().toString();
         String inputtedPasswordForLoginRequest = passwordEditTextField.getText().toString();
-        RemoteServerAPI.sendMessageToRemoteServer(messageToSendToServer);
+        RemoteServerAPI remoteServerAPI = RemoteServerAPI.remoteServerAPIWithContext(this.getApplicationContext());
+        remoteServerAPI.loginToRemoteServerWithUsernamePasswordAndAPIDelegate(inputtedUsernameForLoginRequest, inputtedPasswordForLoginRequest, new RemoteServerAPI.RemoteServerAPIDelegate() {
+            @Override
+            public void receiveResponseFromAPI(RemoteServerAPIResponse apiResponse) {
+                LoginToRemoteServerActivity.this.showMessageToUser(apiResponse.responseAsString());
+            }
+        });
     }
 }
