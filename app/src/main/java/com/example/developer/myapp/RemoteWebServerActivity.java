@@ -11,6 +11,7 @@ package com.example.developer.myapp;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class RemoteWebServerActivity extends BaseActivity {
 
@@ -34,7 +35,16 @@ public class RemoteWebServerActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 String messageToSendToServer = textBoxForInputtingUserMessage.getText().toString();
-                RemoteServerAPI.sendMessageToRemoteServer(messageToSendToServer);
+                RemoteServerAPI.sendMessageToRemoteServerWithMessageToSendAndAPIDelegate(messageToSendToServer, RemoteWebServerActivity.this.delegateWhichDisplaysAPIResponseAsToastMessage());
+            }
+        };
+    }
+
+    private RemoteServerAPI.RemoteServerAPIDelegate delegateWhichDisplaysAPIResponseAsToastMessage() {
+        return new RemoteServerAPI.RemoteServerAPIDelegate() {
+            @Override
+            public void receiveResponseFromAPI(RemoteServerAPIResponse apiResponse) {
+                Toast.makeText(RemoteWebServerActivity.this, apiResponse.responseAsString(), Toast.LENGTH_LONG);
             }
         };
     }
